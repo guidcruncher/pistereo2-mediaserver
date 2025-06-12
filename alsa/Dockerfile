@@ -28,6 +28,9 @@ mkdir -p /config /cache
 EOF
 
 WORKDIR /app
+COPY ./config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
+COPY ./config/asound.conf /etc/asound.conf
+
 COPY start.sh .
 COPY ecosystem.config.js .
 ADD ./librespot/ /app/librespot
