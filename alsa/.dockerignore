@@ -1,0 +1,8 @@
+volumes/
+node_modules/
+*.md
+.restart
+.env
+nodemon.json
+run.sh
+build
