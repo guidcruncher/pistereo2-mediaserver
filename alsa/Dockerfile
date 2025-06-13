@@ -45,6 +45,7 @@ WORKDIR /app
 COPY ./alsa/config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
 COPY ./alsa/config/asound.conf /etc/asound.conf
 COPY --from=build /build/dist/ /app/mediaserver
+COPY ./mediaserver/api.sh /app/mediaserver/api.sh
 COPY ./alsa/startcontainer.sh .
 COPY ./ecosystem.config.js .
 ADD ./alsa/librespot/ /app/librespot
