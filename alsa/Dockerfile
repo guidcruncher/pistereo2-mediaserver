@@ -22,9 +22,6 @@ apt install -y alsa-utils alsa-tools libasound2 jq sudo libogg-dev \
   libvorbis-dev libasound2-dev libasound2-plugin-equal \
   libasound2-plugins mpv
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh \
-cargo install librespot
-
 apt clean -y > /dev/null
 rm -rf /var/cache/apt/archives /var/lib/apt/lists
 
