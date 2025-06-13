@@ -22,6 +22,9 @@ apt install -y alsa-utils alsa-tools libasound2 jq sudo libogg-dev \
   libvorbis-dev libasound2-dev libasound2-plugin-equal \
   libasound2-plugins mpv
 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh \
+cargo install librespot
+
 apt clean -y > /dev/null
 rm -rf /var/cache/apt/archives /var/lib/apt/lists
 
@@ -43,11 +46,12 @@ WORKDIR /app
 COPY ./alsa/config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
 COPY ./alsa/config/asound.conf /etc/asound.conf
 COPY --from=build /build/dist/ /app/mediaserver
-COPY ./alsa/start.sh .
+COPY ./server/api.sh /app/mediaserver/api.sh
+COPY ./alsa/startcontainer.sh .
 COPY ./ecosystem.config.js .
 ADD ./alsa/librespot/ /app/librespot
 ADD ./alsa/mpv/ /app/mpv
-RUN chmod +x ./mpv/*.sh ./librespot/*.sh ./*.sh
+RUN chmod +x ./mpv/*.sh ./librespot/*.sh ./*.sh ./mediaserver/*.sh
 
 RUN <<EOF
 mkdir -p ./librespot
@@ -108,4 +112,4 @@ ENV IN_DOCKER="yes"
 ENV PISTEREO_EQ_RESET=60
 
 ENTRYPOINT [ "/bin/sh", "-E", "-c" ]
-CMD ["/app/start.sh"]
+CMD ["/app/startcontainer.sh"]

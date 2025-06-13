@@ -4,7 +4,7 @@ module.exports = {
   {
     name   : "API",
     cwd    : "/app/mediaserver",
-    script : "main.js",
+    script : "api.sh",
     env_production: {
     },
     env_development: {
@@ -26,17 +26,6 @@ module.exports = {
     env_production: {
     },
     env_development: {
-    }
-  },
-  {
-    name   : "Server",
-    cwd    : "/app/server",
-    script : "start.sh",
-    env_production: {
-       NODE_ENV: "production",
-    },
-    env_development: {
-       NODE_ENV: "development",
     }
   }
   ]
