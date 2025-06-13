@@ -1,9 +1,13 @@
 FROM --platform=linux/arm64 node:bullseye-slim AS build
 WORKDIR /build
 ADD ./mediaserver/ /build/
-RUN npm i --prefer-offline --no-audit --progress=false
-RUN npm run build
 
+RUN <<EOF
+npm i --prefer-offline --no-audit --progress=false
+npm run build
+mkdir -p /build/dist/node_modules/
+cp node_modules/* /build/dist/node_modules/ -r
+EOF
 
 FROM --platform=linux/arm64 node:bullseye-slim AS base
 ARG DEBIAN_FRONTEND=noninteractive
