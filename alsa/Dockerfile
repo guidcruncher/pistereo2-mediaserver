@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 node:bullseye-slim AS build
+FROM --platform=linux/arm64 node:bookworm-slim AS build
 WORKDIR /build
 ADD ./mediaserver/ /build/
 
@@ -11,7 +11,7 @@ chmod +x /build/dist/api.sh
 cp node_modules/* /build/dist/node_modules/ -r
 EOF
 
-FROM --platform=linux/arm64 node:bullseye-slim AS base
+FROM --platform=linux/arm64 node:bookworm-slim AS base
 ARG DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
 ARG TARGETARCH
