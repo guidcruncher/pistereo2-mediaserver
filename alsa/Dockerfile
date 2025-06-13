@@ -1,3 +1,10 @@
+FROM --platform=linux/arm64 node:bullseye-slim AS build
+WORKDIR /build
+ADD ./mediaserver/ /build/
+RUN npm i --prefer-offline --no-audit --progress=false
+RUN npm run build
+
+
 FROM --platform=linux/arm64 node:bullseye-slim AS base
 ARG DEBIAN_FRONTEND=noninteractive
 ENV NODE_ENV=production
@@ -25,16 +32,17 @@ pm2 install pm2-logrotate
 pm2 set pm2-logrotate:retain 2
 pm2 set pm2-logrotate:max_size 5M
 mkdir -p /config /cache
+mkdir -p /app/librespot /app/mpv /app/mediaserver
 EOF
 
 WORKDIR /app
-COPY ./config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
-COPY ./config/asound.conf /etc/asound.conf
-
-COPY start.sh .
-COPY ecosystem.config.js .
-ADD ./librespot/ /app/librespot
-ADD ./mpv/ /app/mpv
+COPY ./alsa/config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
+COPY ./alsa/config/asound.conf /etc/asound.conf
+COPY --from=build /build/dist/ /app/mediaserver
+COPY ./alsa/start.sh .
+COPY ./ecosystem.config.js .
+ADD ./alsa/librespot/ /app/librespot
+ADD ./alsa/mpv/ /app/mpv
 RUN chmod +x ./mpv/*.sh ./librespot/*.sh ./*.sh
 
 RUN <<EOF

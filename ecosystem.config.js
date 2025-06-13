@@ -2,6 +2,15 @@
 module.exports = {
   apps : [
   {
+    name   : "API",
+    cwd    : "/app/mediaserver",
+    script : "main.js",
+    env_production: {
+    },
+    env_development: {
+    }
+  },
+  {
     name   : "Librespot",
     cwd    : "/app/librespot",
     script : "librespot.sh",
