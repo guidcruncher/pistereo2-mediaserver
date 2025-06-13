@@ -6,6 +6,8 @@ RUN <<EOF
 npm i --prefer-offline --no-audit --progress=false
 npm run build
 mkdir -p /build/dist/node_modules/
+cp /build/mediaserver/api.sh /build/dist/api.sh
+chmod +x /build/dist/api.sh
 cp node_modules/* /build/dist/node_modules/ -r
 EOF
 
@@ -43,7 +45,6 @@ WORKDIR /app
 COPY ./alsa/config/100-equal.conf /etc/alsa/conf.d/100-equal.conf
 COPY ./alsa/config/asound.conf /etc/asound.conf
 COPY --from=build /build/dist/ /app/mediaserver
-COPY ./mediaserver/api.sh /app/mediaserver/api.sh
 COPY ./alsa/startcontainer.sh .
 COPY ./ecosystem.config.js .
 ADD ./alsa/librespot/ /app/librespot
