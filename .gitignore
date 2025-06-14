@@ -1,4 +1,5 @@
 # compiled output
+*.env
 volumes
 dist
 node_modules
