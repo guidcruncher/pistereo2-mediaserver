@@ -24,9 +24,9 @@ export class TransportService {
         params.append(key, (opt.query[key] ?? '').toString());
       }
       if (params.size > 0) {
-        return `${fullUrl}?${params.toString()}`;
+        return `${apiurl}?${params.toString()}`;
       }
-      return fullUrl;
+      return apiurl;
     };
 
     const makeRequest = (fullUrl) => {
