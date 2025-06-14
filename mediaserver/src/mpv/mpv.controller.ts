@@ -1,7 +1,7 @@
 import { Get, Put, Post, Query, Controller } from '@nestjs/common';
 import { MpvPlayerService } from './mpv-player.service';
 
-@Controller('/api/streamxx')
+@Controller('/api/stream')
 export class MpvController {
   constructor(private readonly player: MpvPlayerService) {}
 
