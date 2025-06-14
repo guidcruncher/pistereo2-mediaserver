@@ -45,4 +45,16 @@ export class RegistryClientService {
       },
     });
   }
+
+  public async unregister() {
+    let registryUrl = process.env.PISTEREO_SERVICE_REGISTRY as string;
+    let transport: TransportService = new TransportService(registryUrl);
+    let ipAddress: string = await this.getHostIPAddress();
+    return await transport.request('DELETE', '/heartbeat', {
+      query: {
+        id: crypto.createHash('sha256').update(os.hostname()).digest('hex'),
+      },
+    });
+  }
+
 }
