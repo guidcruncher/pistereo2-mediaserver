@@ -35,6 +35,14 @@ export class LibrespotPlayerService {
     }
   }
 
+  async stop() {
+    try {
+      return await this.transport.request('POST', '/player/pause');
+    } catch (err) {
+      return {};
+    }
+  }
+
   async resume() {
     try {
       return await this.transport.request('POST', '/player/resume');
