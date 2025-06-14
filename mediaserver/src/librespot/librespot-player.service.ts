@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { TransportService } from '../transport.service';
+import { State, StateService } from '../state/state.service';
 
 @Injectable()
 export class LibrespotPlayerService {
@@ -79,6 +80,10 @@ export class LibrespotPlayerService {
 
   async setVolume(volume: number) {
     try {
+      let state = StateService.loadState();
+      state.volumeLibRespot = volume;
+      StateService.saveState(state);
+
       return await this.transport.request('POST', '/player/volume', {
         body: { volume: volume, relative: false },
       });

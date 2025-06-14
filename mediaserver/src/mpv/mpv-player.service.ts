@@ -3,6 +3,7 @@ import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
+import { State, StateService } from '../state/state.service';
 
 const execFile = util.promisify(require('node:child_process').execFile);
 
@@ -135,6 +136,9 @@ export class MpvPlayerService {
   }
 
   async setVolume(volume: number) {
+    let state = StateService.loadState();
+    state.volumeMpv = volume;
+    StateService.saveState(state);
     return await this.sendCommand('set_property', ['volume', `${volume}`]);
   }
 }

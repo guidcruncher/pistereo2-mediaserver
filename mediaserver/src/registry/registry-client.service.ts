@@ -7,6 +7,7 @@ import * as dns from 'node:dns';
 import * as os from 'node:os';
 import { TransportService } from '../transport.service';
 import * as crypto from 'node:crypto';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class RegistryClientService implements OnModuleInit {
@@ -26,7 +27,8 @@ export class RegistryClientService implements OnModuleInit {
 
   public async register() {
     try {
-      let registryUrl = process.env.PISTEREO_SERVICE_REGISTRY as string;
+      let registryUrl =
+        (process.env.PISTEREO_SERVICE_REGISTRY as string) + '/api/discovery';
       let transport: TransportService = new TransportService(registryUrl);
       let ipAddress: string = await this.getHostIPAddress();
 
@@ -43,9 +45,11 @@ export class RegistryClientService implements OnModuleInit {
     }
   }
 
+  @Cron('*/15 * * * * *')
   public async heartbeat() {
     try {
-      let registryUrl = process.env.PISTEREO_SERVICE_REGISTRY as string;
+      let registryUrl =
+        (process.env.PISTEREO_SERVICE_REGISTRY as string) + '/api/discovery';
       let transport: TransportService = new TransportService(registryUrl);
       let ipAddress: string = await this.getHostIPAddress();
       return await transport.request('GET', '/heartbeat', {
@@ -58,10 +62,11 @@ export class RegistryClientService implements OnModuleInit {
 
   public async unregister() {
     try {
-      let registryUrl = process.env.PISTEREO_SERVICE_REGISTRY as string;
+      let registryUrl =
+        (process.env.PISTEREO_SERVICE_REGISTRY as string) + '/api/discovery';
       let transport: TransportService = new TransportService(registryUrl);
       let ipAddress: string = await this.getHostIPAddress();
-      return await transport.request('DELETE', '/heartbeat', {
+      return await transport.request('DELETE', '/unregister', {
         query: {
           id: crypto.createHash('sha256').update(os.hostname()).digest('hex'),
         },
