@@ -5,9 +5,15 @@ import { AppService } from './app.service';
 import { LibrespotModule } from './librespot/librespot.module';
 import { MpvModule } from './mpv/mpv.module';
 import { TransportService } from './transport.service';
+import { RegistryModule } from './registry/registry.module';
 
 @Module({
-  imports: [EventEmitterModule.forRoot(), LibrespotModule, MpvModule],
+  imports: [
+    EventEmitterModule.forRoot(),
+    LibrespotModule,
+    MpvModule,
+    RegistryModule,
+  ],
   controllers: [AppController],
   providers: [AppService, TransportService],
   exports: [TransportService],
