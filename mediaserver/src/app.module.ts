@@ -9,6 +9,6 @@ import { TransportService } from './transport.service';
   imports: [LibrespotModule, MpvModule],
   controllers: [AppController],
   providers: [AppService, TransportService],
-  exports: [ TransportService ],
+  exports: [TransportService],
 })
 export class AppModule {}
