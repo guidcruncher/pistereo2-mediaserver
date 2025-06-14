@@ -6,7 +6,7 @@ export class TransportService {
   public async request(
     method: string,
     url: string,
-    options: any,
+    options: any = {},
   ): Promise<any> {
     let defaults = {
       body: undefined,
