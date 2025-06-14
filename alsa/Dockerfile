@@ -6,7 +6,7 @@ RUN <<EOF
 npm i --prefer-offline --no-audit --progress=false
 npm run build
 mkdir -p /build/dist/node_modules/
-cp /build/mediaserver/api.sh /build/dist/api.sh
+cp /build/api.sh /build/dist/api.sh
 chmod +x /build/dist/api.sh
 cp node_modules/* /build/dist/node_modules/ -r
 EOF
