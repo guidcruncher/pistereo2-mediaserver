@@ -1,6 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
 
-@Injectable()
 export class TransportService {
   constructor(private readonly baseUrl: string) {}
 
@@ -10,11 +9,11 @@ export class TransportService {
     options: any,
   ): Promise<any> {
     let defaults = {
-      body: (any = undefined),
-      query: (Record<string, any> = {}),
-      header: (Record<string, string> = {
+      body: undefined,
+      query: {},
+      headers: {
         'Content-Type': 'application/json',
-      }),
+      },
     };
     let opt = { ...defaults, ...options };
 
@@ -24,28 +23,28 @@ export class TransportService {
       for (const key in opt.query) {
         params.append(key, (opt.query[key] ?? '').toString());
       }
-      if (params.length > 0) {
+      if (params.size > 0) {
         return `${fullUrl}?${params.toString()}`;
       }
       return fullUrl;
     };
 
-    const makeRequest = () => {
+    const makeRequest = (fullUrl) => {
       if (opt.body && ['PUT', 'POST'].includes(method.toUpperCase())) {
-        return fetch(fullUrl(), {
+        return fetch(fullUrl, {
           method: method.toUpperCase(),
           headers: opt.headers,
           body: JSON.stringify(opt.body),
         });
       }
 
-      return fetch(fullUrl(), {
+      return fetch(fullUrl, {
         method: method,
         headers: opt.headers,
       });
     };
 
-    const response = await makeRequest();
+    const response = await makeRequest(fullUrl());
 
     if (!response.ok) {
       let txt = '';
@@ -71,7 +70,6 @@ export class TransportService {
         await response.json(),
       );
     } catch (err) {
-      this.logger.error('Error occured making http request', err);
       return this.wrapResponse(response.statusText, response.status, {});
     }
   }
