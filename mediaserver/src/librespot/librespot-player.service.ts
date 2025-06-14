@@ -7,7 +7,7 @@ export class LibrespotPlayerService {
     'http://127.0.0.1:3678',
   );
 
-  async currentPlaying(token: string) {
+  async getStatus() {
     const result = await this.transport.request('GET', '/status');
     return result.value;
   }
