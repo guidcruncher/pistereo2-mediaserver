@@ -50,11 +50,13 @@ export class TokenGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const [authType, token] = request.headers.authorization?.split(' ') ?? [];
-    const clientToken = authType === 'Bearer' ? token : "";
-    const serverToken=hmac(request.body)
+    const clientToken = authType === 'Bearer' ? token : '';
+    const serverToken = hmac(request.body);
 
-    if (crypto.timingSafeEqual(Buffer.from(clientToken), Buffer.from(serverToken)) o ) {
-      return true
+    if (
+      crypto.timingSafeEqual(Buffer.from(clientToken), Buffer.from(serverToken))
+    ) {
+      return true;
     } else {
       throw new UnauthorizedException();
     }

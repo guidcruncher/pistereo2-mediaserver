@@ -20,7 +20,7 @@ export class StateService {
   static saveState(state: State) {
     let file = path.join(process.env.PISTEREO_CONFIG as string, 'state.json');
     if (fs.existsSync(file)) {
-      fs.unlink(file);
+      fs.unlinkSync(file);
     }
 
     fs.writeFileSync(file, JSON.stringify(state), 'utf8');
