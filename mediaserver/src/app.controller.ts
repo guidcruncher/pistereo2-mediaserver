@@ -1,4 +1,5 @@
 import {
+  Query,
   HttpException,
   Body,
   Post,
@@ -74,7 +75,7 @@ export class AppController {
 
   @Put('/api/player/stop')
   async stop() {
-    let source = this.getSource().source;
+    let source = (await this.getSource()).source;
     if (source == 'mpv') {
       return await this.mpvPlayer.stop();
     }
@@ -86,7 +87,7 @@ export class AppController {
 
   @Put('/api/player/pause')
   async pause() {
-    let source = this.getSource().source;
+    let source = (await this.getSource()).source;
     if (source == 'mpv') {
       return await this.mpvPlayer.pause();
     }
@@ -98,7 +99,7 @@ export class AppController {
 
   @Put('/api/player/resume')
   async resume() {
-    let source = this.getSource().source;
+    let source = (await this.getSource()).source;
     if (source == 'mpv') {
       return await this.mpvPlayer.resume();
     }
@@ -110,7 +111,7 @@ export class AppController {
 
   @Put('/api/player/previous')
   async previous() {
-    let source = this.getSource().source;
+    let source = (await this.getSource()).source;
     if (source == 'mpv') {
       return await this.mpvPlayer.previous();
     }
