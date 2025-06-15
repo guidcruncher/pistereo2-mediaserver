@@ -57,7 +57,7 @@ export class TokenGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const [authType, token] = request.headers.authorization?.split(' ') ?? [];
     const clientToken = authType === 'Bearer' ? token : '';
-    const serverToken = hmac(request.body);
+    const serverToken = hmac((process.env.PISTEREO_MEDIASERVER_ID as string));
 
     if (tokencompare(clientToken, serverToken)) {
       return true;
