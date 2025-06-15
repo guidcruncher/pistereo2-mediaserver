@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { LibrespotPlayerService } from './librespot-player.service';
 import { LibrespotController } from './librespot.controller';
+import { LibrespotClientService } from './librespot-client.service';
 
 @Module({
-  providers: [LibrespotPlayerService],
+  providers: [LibrespotPlayerService, LibrespotClientService],
   controllers: [LibrespotController],
+  exports: [LibrespotPlayerService, LibrespotClientService],
 })
 export class LibrespotModule {}

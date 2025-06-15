@@ -1,7 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, MessageEvent, Sse } from '@nestjs/common'
+import { EventEmitter2 } from '@nestjs/event-emitter'
+import { fromEvent, map, Observable } from 'rxjs'
 
-@Controller()
+import { MpvClientService } from './mpv/mpv-client.service'
+import { LibrespotClientService } from './librespot/librespot-client.service'
+
+@Controller('/')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly librespotClientService: LibrespotClientService,
+    private readonly mpvClientService: MpvClientService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
+
+  @Sse('/sse/player')
+  async ssePlayer(payload: any): Promise<Observable<MessageEvent>> {
+    return fromEvent(this.eventEmitter, 'player').pipe(
+      map((payload) => ({
+        data: JSON.stringify(payload),
+      })),
+    )
+  }
 }

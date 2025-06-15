@@ -27,8 +27,7 @@ export class MpvPlayerService implements OnModuleInit {
     commandText = commandText.concat(parameters);
     const jsonCmd: string = JSON.stringify({ command: commandText });
     const socket: string =
-      (process.env.PISTEREO_MPV_SOCKET as string) ??
-      path.join(process.cwd(), '../pistereo-config/mpv/socket');
+      (process.env.PISTEREO_MPV_SOCKET as string) ?? ""
     const cmdArgs: string[] = ['-c', `echo '${jsonCmd}' | socat - ${socket}`];
 
     return new Promise((resolve, reject) => {
@@ -72,6 +71,19 @@ export class MpvPlayerService implements OnModuleInit {
         reject(err);
       }
     });
+  }
+
+  async getMetaData() {
+    const idleProp = await this.sendCommand('get_property', ['core-idle'])
+
+    if (idleProp && idleProp.statusCode == 200 && !idleProp.data) {
+      const metaData = await this.sendCommand('get_property', ['metadata'])
+      if (metaData && metaData.statusCode == 200 && metaData.data) {
+        return metaData.data
+      }
+    }
+
+    return {}
   }
 
   async getStatus() {
