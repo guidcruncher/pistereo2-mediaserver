@@ -1,6 +1,8 @@
 import { Get, Put, Post, Query, Controller } from '@nestjs/common';
 import { MpvPlayerService } from './mpv-player.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('/api/stream')
 export class MpvController {
   constructor(private readonly player: MpvPlayerService) {}
@@ -27,7 +29,7 @@ export class MpvController {
 
   @Put('resume')
   async resume() {
-    return await this.player.getStatus();
+    return await this.player.resume();
   }
 
   @Put('previous')

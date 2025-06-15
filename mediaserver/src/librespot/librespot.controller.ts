@@ -1,6 +1,8 @@
 import { Get, Put, Post, Query, Controller } from '@nestjs/common';
 import { LibrespotPlayerService } from './librespot-player.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('/api/spotify')
 export class LibrespotController {
   constructor(private readonly player: LibrespotPlayerService) {}
@@ -27,7 +29,7 @@ export class LibrespotController {
 
   @Put('resume')
   async resume() {
-    return await this.player.getStatus();
+    return await this.player.resume();
   }
 
   @Put('previous')
