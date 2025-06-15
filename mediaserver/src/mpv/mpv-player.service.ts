@@ -26,8 +26,7 @@ export class MpvPlayerService implements OnModuleInit {
     let commandText: any[] = [cmd];
     commandText = commandText.concat(parameters);
     const jsonCmd: string = JSON.stringify({ command: commandText });
-    const socket: string =
-      (process.env.PISTEREO_MPV_SOCKET as string) ?? ""
+    const socket: string = (process.env.PISTEREO_MPV_SOCKET as string) ?? '';
     const cmdArgs: string[] = ['-c', `echo '${jsonCmd}' | socat - ${socket}`];
 
     return new Promise((resolve, reject) => {
@@ -74,16 +73,16 @@ export class MpvPlayerService implements OnModuleInit {
   }
 
   async getMetaData() {
-    const idleProp = await this.sendCommand('get_property', ['core-idle'])
+    const idleProp = await this.sendCommand('get_property', ['core-idle']);
 
     if (idleProp && idleProp.statusCode == 200 && !idleProp.data) {
-      const metaData = await this.sendCommand('get_property', ['metadata'])
+      const metaData = await this.sendCommand('get_property', ['metadata']);
       if (metaData && metaData.statusCode == 200 && metaData.data) {
-        return metaData.data
+        return metaData.data;
       }
     }
 
-    return {}
+    return {};
   }
 
   async getStatus() {
@@ -155,7 +154,7 @@ export class MpvPlayerService implements OnModuleInit {
   }
 
   async setVolume(volume: number) {
-    let state = StateService.loadState();
+    let state = StateService.loadState() ?? new State()
     state.volumeMpv = volume;
     StateService.saveState(state);
     return await this.sendCommand('set_property', ['volume', `${volume}`]);

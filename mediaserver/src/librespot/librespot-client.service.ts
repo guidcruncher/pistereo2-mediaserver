@@ -26,7 +26,7 @@ export class LibrespotClientService implements OnModuleDestroy {
   }
 
   public onModuleDestroy() {
-    this.socket.dlose();
+    this.socket.close();
   }
 
   private async onMessage(namespace: string, payload: any) {
@@ -70,6 +70,11 @@ export class LibrespotClientService implements OnModuleDestroy {
         break;
       case 'not_playing':
       case 'stopped':
+        this.eventEmitter.emit('player', {
+          type: 'stopped',
+          stopped: true,
+          source: 'spotify',
+        });
       case 'seek':
       case 'volume':
       case 'shuffle_context':

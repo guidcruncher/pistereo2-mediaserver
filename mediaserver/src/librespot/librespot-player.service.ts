@@ -87,7 +87,7 @@ export class LibrespotPlayerService implements OnModuleInit {
 
   async setVolume(volume: number) {
     try {
-      let state = StateService.loadState();
+      let state = StateService.loadState() ?? new State();
       state.volumeLibRespot = volume;
       StateService.saveState(state);
 

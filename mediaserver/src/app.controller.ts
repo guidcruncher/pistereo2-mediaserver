@@ -1,9 +1,9 @@
-import { Controller, MessageEvent, Sse } from '@nestjs/common'
-import { EventEmitter2 } from '@nestjs/event-emitter'
-import { fromEvent, map, Observable } from 'rxjs'
+import { Controller, MessageEvent, Sse } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { fromEvent, map, Observable } from 'rxjs';
 
-import { MpvClientService } from './mpv/mpv-client.service'
-import { LibrespotClientService } from './librespot/librespot-client.service'
+import { MpvClientService } from './mpv/mpv-client.service';
+import { LibrespotClientService } from './librespot/librespot-client.service';
 
 @Controller('/')
 export class AppController {
@@ -19,6 +19,6 @@ export class AppController {
       map((payload) => ({
         data: JSON.stringify(payload),
       })),
-    )
+    );
   }
 }
