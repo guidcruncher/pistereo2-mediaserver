@@ -17,7 +17,6 @@ export class RegistryClientService implements OnModuleInit {
       dns.lookup(os.hostname(), options, (err, addr) => {
         if (err) {
           reject(err);
-          console.error(err);
         } else {
           resolve(addr);
         }

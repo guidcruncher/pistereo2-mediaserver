@@ -7,7 +7,6 @@ export class RegistryShutdownService implements OnApplicationShutdown {
 
   onApplicationShutdown(signal: string) {
     this.registryClientService.unregister().then(() => {
-      console.log(signal); // e.g. "SIGINT"
     });
   }
 }

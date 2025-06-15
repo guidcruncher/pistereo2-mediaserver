@@ -3,6 +3,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as net from 'net';
 import * as path from 'path';
 import { MpvPlayerService } from './mpv-player.service';
+import { LibrespotPlayerService } from '../librespot/librespot-player.service'
 
 @Injectable()
 export class MpvClientService {
@@ -17,6 +18,11 @@ export class MpvClientService {
     private readonly mpvPlayer: MpvPlayerService,
   ) {
     this.open();
+  }
+
+  private async stopStream() {
+    let mpv = new LibrespotPlayerService()
+    return await mpv.stop()
   }
 
   private open() {
@@ -39,6 +45,14 @@ export class MpvClientService {
 
       if (json.event) {
         switch (json.event) {
+          case 'file-loaded':
+             this.stopStream()
+              this.eventEmitter.emit('player', {
+                type: 'file-loaded',
+                data: json,
+                source: 'mpv',
+              });
+             break
           case 'end-file':
             if (json.reason === 'eof') {
               this.eventEmitter.emit('player', {

@@ -6,17 +6,15 @@ export class TransportService {
   public async request(
     method: string,
     url: string,
-    options: any = {},
+    options: any = {}, body: any = {}
   ): Promise<any> {
     let defaults = {
-      body: undefined,
       query: {},
       headers: {
         'Content-Type': 'application/json',
       },
     };
     let opt = { ...defaults, ...options };
-
     const fullUrl = () => {
       let apiurl = this.baseUrl + url;
       const params = new URLSearchParams();
@@ -30,11 +28,11 @@ export class TransportService {
     };
 
     const makeRequest = (fullUrl) => {
-      if (opt.body && ['PUT', 'POST'].includes(method.toUpperCase())) {
+      if (body && ['PUT', 'POST'].includes(method.toUpperCase())) {
         return fetch(fullUrl, {
           method: method.toUpperCase(),
           headers: opt.headers,
-          body: JSON.stringify(opt.body),
+          body: JSON.stringify(body),
         });
       }
 
