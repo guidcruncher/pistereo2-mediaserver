@@ -24,6 +24,8 @@ apt install -y alsa-utils alsa-tools libasound2 jq sudo libogg-dev \
   libvorbis-dev libasound2-dev libasound2-plugin-equal \
   libasound2-plugins mpv
 
+apt install -y pipewire-alsa pipewire pipewire-tools
+
 apt clean -y > /dev/null
 rm -rf /var/cache/apt/archives /var/lib/apt/lists
 
