@@ -26,12 +26,18 @@ export const AuthToken = createParamDecorator(
 );
 
 export const hmac = (payload) => {
-  hmac = crypto.createHmac(
+  let hmac = crypto.createHmac(
     'sha256',
     process.env.PISTEREO_MEDIASERVER_SECRET as string,
   );
   hmac.update(payload);
-  retunrrmrrhmac.digest('hex');
+  return hmac.digest('hex');
+};
+
+const tokencompare = (client, expected) => {
+  const a = Buffer.from(client);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 };
 
 @Injectable()
@@ -53,9 +59,7 @@ export class TokenGuard implements CanActivate {
     const clientToken = authType === 'Bearer' ? token : '';
     const serverToken = hmac(request.body);
 
-    if (
-      crypto.timingSafeEqual(Buffer.from(clientToken), Buffer.from(serverToken))
-    ) {
+    if (tokencompare(clientToken, serverToken)) {
       return true;
     } else {
       throw new UnauthorizedException();

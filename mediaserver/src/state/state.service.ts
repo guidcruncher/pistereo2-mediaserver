@@ -14,7 +14,7 @@ export class StateService {
       return JSON.parse(fs.readFileSync(file, 'utf8'));
     }
 
-    return new State();
+    return undefined;
   }
 
   static saveState(state: State) {

@@ -1,9 +1,16 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { OnModuleInit, HttpException, Injectable } from '@nestjs/common';
 import { TransportService } from '../transport.service';
 import { State, StateService } from '../state/state.service';
 
 @Injectable()
-export class LibrespotPlayerService {
+export class LibrespotPlayerService implements OnModuleInit {
+  onModuleInit() {
+    let state = StateService.loadState();
+    if (state) {
+      this.setVolume(state.volumeLibRespot);
+    }
+  }
+
   private readonly transport: TransportService = new TransportService(
     'http://127.0.0.1:3678',
   );

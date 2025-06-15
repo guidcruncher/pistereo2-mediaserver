@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { OnModuleInit, HttpException, Injectable } from '@nestjs/common';
 import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -14,7 +14,14 @@ const errorCodes: Record<string, number> = {
 };
 
 @Injectable()
-export class MpvPlayerService {
+export class MpvPlayerService implements OnModuleInit {
+  onModuleInit() {
+    let state = StateService.loadState();
+    if (state) {
+      this.setVolume(state.volumeMpv);
+    }
+  }
+
   private async sendCommand(cmd: string, parameters: any[] = []): Promise<any> {
     let commandText: any[] = [cmd];
     commandText = commandText.concat(parameters);
