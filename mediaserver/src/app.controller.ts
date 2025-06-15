@@ -134,7 +134,9 @@ export class AppController {
 
   @Get('/api/player/volume')
   async getVolume() {
-    return await this.mpvPlayer.getVolume();
+    let value = await this.mpvPlayer.getVolume();
+    if (value) {return {volume: value}}
+    return {volume: undefined}
   }
 
   @Put('/api/player/volume')
