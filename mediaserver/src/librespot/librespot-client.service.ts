@@ -1,7 +1,7 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WebSocket } from 'ws';
-import { MpvPlayerService } from '../mpv/mpv-player.service'
+import { MpvPlayerService } from '../mpv/mpv-player.service';
 
 @Injectable()
 export class LibrespotClientService implements OnModuleDestroy {
@@ -12,8 +12,8 @@ export class LibrespotClientService implements OnModuleDestroy {
   }
 
   private async stopStream() {
-    let mpv = new MpvPlayerService()
-    return await mpv.stop()
+    let mpv = new MpvPlayerService();
+    return await mpv.stop();
   }
 
   public open(path: string) {
@@ -53,7 +53,7 @@ export class LibrespotClientService implements OnModuleDestroy {
         break;
       case 'will_play':
       case 'active':
-        this.stopStream()
+        this.stopStream();
         this.eventEmitter.emit('player', {
           type: 'active',
           active: true,

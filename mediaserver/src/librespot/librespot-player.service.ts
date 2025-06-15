@@ -24,7 +24,12 @@ export class LibrespotPlayerService implements OnModuleInit {
     let request: any = {} as any;
     request = { uri: uri, paused: false };
 
-    const result = await this.transport.request('POST', '/player/play', {}, request);
+    const result = await this.transport.request(
+      'POST',
+      '/player/play',
+      {},
+      request,
+    );
 
     if (result.status == 204) {
       return result;
@@ -67,7 +72,12 @@ export class LibrespotPlayerService implements OnModuleInit {
 
   async next(uri: string) {
     try {
-      return await this.transport.request('POST', '/player/next', {}, { uri: uri });
+      return await this.transport.request(
+        'POST',
+        '/player/next',
+        {},
+        { uri: uri },
+      );
     } catch (err) {
       return {};
     }
@@ -84,10 +94,15 @@ export class LibrespotPlayerService implements OnModuleInit {
   async setVolume(volume: number) {
     try {
       let state = StateService.loadState() ?? new State();
-      state.volumeLibRespot = parseInt(volume);
+      state.volumeLibRespot = parseInt(volume.toString());
       StateService.saveState(state);
-} catch (err) {}
+    } catch (err) {}
 
-      return await this.transport.request('POST', '/player/volume', {}, { volume: parseInt(volume), relative: false })
+    return await this.transport.request(
+      'POST',
+      '/player/volume',
+      {},
+      { volume: parseInt(volume.toString()), relative: false },
+    );
   }
 }

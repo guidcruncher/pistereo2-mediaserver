@@ -6,7 +6,8 @@ export class TransportService {
   public async request(
     method: string,
     url: string,
-    options: any = {}, body: any = {}
+    options: any = {},
+    body: any = {},
   ): Promise<any> {
     let defaults = {
       query: {},

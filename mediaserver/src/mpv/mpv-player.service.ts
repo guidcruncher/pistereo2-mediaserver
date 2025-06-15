@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
 import { State, StateService } from '../state/state.service';
-import { LibrespotPlayerService } from '../librespot/librespot-player.service'
+import { LibrespotPlayerService } from '../librespot/librespot-player.service';
 
 const execFile = util.promisify(require('node:child_process').execFile);
 
@@ -24,8 +24,8 @@ export class MpvPlayerService implements OnModuleInit {
   }
 
   private async stopStream() {
-    let mpv = new LibrespotPlayerService()
-    return await mpv.stop()
+    let mpv = new LibrespotPlayerService();
+    return await mpv.stop();
   }
 
   private async sendCommand(cmd: string, parameters: any[] = []): Promise<any> {
@@ -130,7 +130,7 @@ export class MpvPlayerService implements OnModuleInit {
   }
 
   async play(url: string) {
-    await this.stopStream()
+    await this.stopStream();
     return await this.sendCommand('loadfile', [url, 'replace']);
   }
 
@@ -161,7 +161,7 @@ export class MpvPlayerService implements OnModuleInit {
   }
 
   async setVolume(volume: number) {
-    let state = StateService.loadState() ?? new State()
+    let state = StateService.loadState() ?? new State();
     state.volumeMpv = volume;
     StateService.saveState(state);
     return await this.sendCommand('set_property', ['volume', `${volume}`]);
