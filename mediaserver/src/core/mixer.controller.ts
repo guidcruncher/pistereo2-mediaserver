@@ -12,16 +12,16 @@ import { MixerService } from './mixer.service';
 import { Mixer, Channel, Frequency } from './equaliser';
 
 @Injectable()
-@Controller('mixer')
+@Controller("/")
 export class MixerController {
   constructor(private readonly mixerService: MixerService) {}
 
-  @Get('/mixer/:device')
+  @Get('/api/mixer/:device')
   async getMixer(@Param('device') device: string) {
     return await this.mixerService.getMixer(device);
   }
 
-  @Put('/mixer/:device/reset')
+  @Put('/api/mixer/:device/reset')
   async resetMixer(@Param('device') device: string) {
     const mixer = await this.mixerService.resetMixer(
       device,
@@ -30,12 +30,12 @@ export class MixerController {
     return mixer;
   }
 
-  @Put('/mixer/:device')
+  @Put('/api/mixer/:device')
   async updateMixer(@Param('device') device: string, @Body() mixer: Mixer) {
     return await this.mixerService.updateMixer(device, mixer);
   }
 
-  @Put('/mixer/:device/channel/:index')
+  @Put('/api/mixer/:device/channel/:index')
   async updateMixerChannel(
     @Param('device') device: string,
     @Param('index') index: number,
