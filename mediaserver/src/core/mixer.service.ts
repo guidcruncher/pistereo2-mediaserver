@@ -1,3 +1,4 @@
+import { State, StateService } from '../state/state.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Channel, Frequency, Mixer } from './equaliser';
 import * as cp from 'child_process';
@@ -17,6 +18,12 @@ export class MixerService {
       const f: Frequency = mixer.frequencies[i];
       await this.cset(device, f.numid, f.channels);
     }
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    s.mixer = mixer;
+    StateService.saveState(s);
   }
 
   async resetMixer(device: string, level: number) {
@@ -28,7 +35,14 @@ export class MixerService {
       });
       await this.cset(device, f.numid, f.channels);
     }
-    return await this.getMixer(device);
+    let mixer = await this.getMixer(device);
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    s.mixer = mixer;
+    StateService.saveState(s);
+    return mixer;
   }
 
   private async cset(device: string, numid: number, values: Channel[]) {
@@ -41,6 +55,7 @@ export class MixerService {
         .map((a) => {
           return a.value;
         })
+
         .join(',')}`,
     ]);
   }

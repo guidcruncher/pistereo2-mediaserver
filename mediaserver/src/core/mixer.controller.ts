@@ -12,7 +12,7 @@ import { MixerService } from './mixer.service';
 import { Mixer, Channel, Frequency } from './equaliser';
 
 @Injectable()
-@Controller("/")
+@Controller('/')
 export class MixerController {
   constructor(private readonly mixerService: MixerService) {}
 

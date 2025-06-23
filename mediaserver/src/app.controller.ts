@@ -219,6 +219,4 @@ export class AppController {
     await this.librespotPlayer.setVolume(volume);
     return {};
   }
-
- 
 }

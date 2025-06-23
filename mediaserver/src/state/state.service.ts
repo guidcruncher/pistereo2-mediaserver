@@ -1,10 +1,12 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { Channel, Frequency, Mixer } from '../data/equaliser';
 
 export class State {
   volumeLibRespot: number;
   volumeMpv: number;
   track: any;
+  mixer: Mixer;
 }
 
 export class StateService {
