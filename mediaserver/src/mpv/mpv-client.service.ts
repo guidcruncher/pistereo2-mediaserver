@@ -68,6 +68,14 @@ export class MpvClientService {
                 data: json,
                 source: 'mpv',
               });
+
+              if (await mpvPlayer.isPlaylistFinished()) {
+                this.eventEmitter.emit('player', {
+                  type: 'playlistFinished',
+                  data: {},
+                  source: 'mpv',
+                });
+              }
             }
             break;
           case 'metadata-update':

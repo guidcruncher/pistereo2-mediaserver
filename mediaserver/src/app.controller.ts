@@ -28,7 +28,7 @@ export class AppController {
     private readonly mpvPlayer: MpvPlayerService,
     private readonly librespotPlayer: LibrespotPlayerService,
     private readonly audioService: AudioService,
-  ) { }
+  ) {}
 
   @Get('/api/player/stream/metadata')
   async getStreamMetaData(@AuthToken() token: string) {
@@ -66,7 +66,7 @@ export class AppController {
 
     if (librespot && librespot.device.playing && librespot.device.active) {
       if (state.track && state.track.uri == librespot.track.uri) {
-        librespot.track = state.track
+        librespot.track = state.track;
       }
 
       return librespot;
@@ -75,9 +75,8 @@ export class AppController {
     let mpv: any = await this.mpvPlayer.getStatus();
 
     if (mpv && mpv.device.active && mpv.device.playing) {
-
       if (state.track && state.track.url == mpv.track.url) {
-        mpv.track = state.track
+        mpv.track = state.track;
       }
 
       return mpv;
@@ -101,7 +100,7 @@ export class AppController {
   async playMedia(@AuthToken() token: string, @Body() data: any) {
     this.logger.verbose('playMedia', JSON.stringify(data));
 
-    let res: any = undefined
+    let res: any = undefined;
 
     if (data.uri.source == 'spotify') {
       res = await this.librespotPlayer.play(data.uri.uri);
@@ -119,7 +118,7 @@ export class AppController {
       }
       state.track = data;
       StateService.saveState(state);
-      return res
+      return res;
     }
 
     throw new HttpException('Bad request', 400);

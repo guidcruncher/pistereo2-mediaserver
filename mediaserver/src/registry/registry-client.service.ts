@@ -13,7 +13,9 @@ import { Cron } from '@nestjs/schedule';
 const dnssd = require('dnssd');
 
 @Injectable()
-export class RegistryClientService implements OnModuleInit, BeforeApplicationShutdown {
+export class RegistryClientService
+  implements OnModuleInit, BeforeApplicationShutdown
+{
   private readonly logger: Logger = new Logger(RegistryClientService.name, {
     timestamp: true,
   });
