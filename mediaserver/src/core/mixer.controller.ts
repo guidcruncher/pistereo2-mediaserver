@@ -1,0 +1,48 @@
+import {
+  Injectable,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Query,
+  Controller,
+} from '@nestjs/common';
+import { MixerService } from './mixer.service';
+import { Mixer, Channel, Frequency } from './equaliser';
+
+@Injectable()
+@Controller('mixer')
+export class MixerController {
+  constructor(private readonly mixerService: MixerService) {}
+
+  @Get('/mixer/:device')
+  async getMixer(@Param('device') device: string) {
+    return await this.mixerService.getMixer(device);
+  }
+
+  @Put('/mixer/:device/reset')
+  async resetMixer(@Param('device') device: string) {
+    const mixer = await this.mixerService.resetMixer(
+      device,
+      parseInt((process.env.PISTEREO_EQ_RESET ?? 60) as string),
+    );
+    return mixer;
+  }
+
+  @Put('/mixer/:device')
+  async updateMixer(@Param('device') device: string, @Body() mixer: Mixer) {
+    return await this.mixerService.updateMixer(device, mixer);
+  }
+
+  @Put('/mixer/:device/channel/:index')
+  async updateMixerChannel(
+    @Param('device') device: string,
+    @Param('index') index: number,
+    @Body() item: Frequency,
+  ) {
+    let mixer = await this.mixerService.getMixer(device);
+    mixer[index] = item;
+    return await this.mixerService.updateMixer(device, mixer);
+  }
+}
