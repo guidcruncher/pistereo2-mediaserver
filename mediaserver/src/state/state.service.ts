@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { Channel, Frequency, Mixer } from '../data/equaliser';
+import { Channel, Frequency, Mixer } from '../core/equaliser';
 
 export class State {
   volumeLibRespot: number;
