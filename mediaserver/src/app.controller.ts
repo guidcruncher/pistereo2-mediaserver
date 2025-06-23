@@ -28,7 +28,7 @@ export class AppController {
     private readonly mpvPlayer: MpvPlayerService,
     private readonly librespotPlayer: LibrespotPlayerService,
     private readonly audioService: AudioService,
-  ) {}
+  ) { }
 
   @Get('/api/player/stream/metadata')
   async getStreamMetaData(@AuthToken() token: string) {
@@ -58,14 +58,28 @@ export class AppController {
   @Get('/api/player/status')
   async determineActive(@AuthToken() token: string) {
     let librespot: any = await this.librespotPlayer.getStatus();
+    let state = StateService.loadState();
+
+    if (!state) {
+      state = new State();
+    }
 
     if (librespot && librespot.device.playing && librespot.device.active) {
+      if (state.track && state.track.uri == librespot.track.uri) {
+        librespot.track = state.track
+      }
+
       return librespot;
     }
 
     let mpv: any = await this.mpvPlayer.getStatus();
 
     if (mpv && mpv.device.active && mpv.device.playing) {
+
+      if (state.track && state.track.url == mpv.track.url) {
+        mpv.track = state.track
+      }
+
       return mpv;
     }
 
@@ -87,20 +101,25 @@ export class AppController {
   async playMedia(@AuthToken() token: string, @Body() data: any) {
     this.logger.verbose('playMedia', JSON.stringify(data));
 
-    let state = StateService.loadState();
-
-    if (!state) {
-      state = new State();
-    }
-    state.track = data;
-    StateService.saveState(state);
+    let res: any = undefined
 
     if (data.uri.source == 'spotify') {
-      return await this.librespotPlayer.play(data.uri.uri);
+      res = await this.librespotPlayer.play(data.uri.uri);
     } else {
       if (data.url) {
-        return await this.mpvPlayer.play(data.url);
+        res = await this.mpvPlayer.play(data.url);
       }
+    }
+
+    if (res) {
+      let state = StateService.loadState();
+
+      if (!state) {
+        state = new State();
+      }
+      state.track = data;
+      StateService.saveState(state);
+      return res
     }
 
     throw new HttpException('Bad request', 400);
