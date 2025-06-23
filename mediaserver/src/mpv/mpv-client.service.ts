@@ -69,7 +69,7 @@ export class MpvClientService {
                 source: 'mpv',
               });
 
-              if (await mpvPlayer.isPlaylistFinished()) {
+              if (await this.mpvPlayer.isPlaylistFinished()) {
                 this.eventEmitter.emit('player', {
                   type: 'playlistFinished',
                   data: {},
