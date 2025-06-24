@@ -226,7 +226,7 @@ export class AppController {
   async speakText(@AuthToken() token: string, @Body() data: any) {
     let status: any = await this.determineActive(token);
 
-    if (status && status.device.playing) {
+    if (status && status.device && status.device.playing) {
       await this.pause(token);
     }
 
@@ -237,7 +237,7 @@ export class AppController {
       data.slow ?? false,
     );
 
-    if (status && status.device.playing) {
+    if (status && status.device && status.device.playing) {
       await this.resume(token);
     }
 
