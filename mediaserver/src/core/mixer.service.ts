@@ -28,6 +28,7 @@ export class MixerService implements OnModuleInit {
     }
     s.mixer = mixer;
     StateService.saveState(s);
+    return mixer;
   }
 
   async resetMixer(device: string, level: number) {
