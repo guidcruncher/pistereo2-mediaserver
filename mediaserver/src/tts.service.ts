@@ -14,8 +14,8 @@ export class TtsService {
   private async downloadFile(url, filename) {
     const response = await fetch(url);
     if (response.ok && response.body) {
-       const buffer = await response.buffer();
-       await writeFile(filename, buffer);
+       const buffer = await response.bytes();
+       fs.writeFileSync(filename, buffer);
     }
   }
 
