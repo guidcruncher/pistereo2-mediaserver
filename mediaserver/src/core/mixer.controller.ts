@@ -42,7 +42,7 @@ export class MixerController {
     @Body() item: Frequency,
   ) {
     let mixer = await this.mixerService.getMixer(device);
-    mixer[index] = item;
+    mixer.frequencies[item.numid-1] = item;
     return await this.mixerService.updateMixer(device, mixer);
   }
 }
