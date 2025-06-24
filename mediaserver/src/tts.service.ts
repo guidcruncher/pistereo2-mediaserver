@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as http from 'node:http';
 import * as https from 'node:https';
-import * as childprocess from 'node:child_process';
+import * as child_process from 'node:child_process';
 
 Injectable();
 export class TtsService {
@@ -14,11 +14,11 @@ export class TtsService {
 
   private async downloadFile(url, dest) {
     return new Promise((resolve, reject) => {
-      const info = urlParse(url);
+      const info = new URL(url)
       const httpClient = info.protocol === 'https:' ? https : http;
       const options = {
         host: info.host,
-        path: info.path,
+        path: info.pathname,
         headers: {
           'user-agent': 'WHAT_EVER',
         },
@@ -40,7 +40,7 @@ export class TtsService {
           });
           file.on('error', function (err) {
             // Delete the file async. (But we don't check the result)
-            fs.unlink(dest);
+            fs.unlinkSync(dest);
             reject(err);
           });
 
