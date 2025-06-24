@@ -28,7 +28,7 @@ export class TtsService {
     });
 
     for (var i = 0; i < results.length; i++) {
-      await this.downloadFile(results[i], this.getFilename(`${i}.mp3`));
+      await this.downloadFile(results[i].url, this.getFilename(`${i}.mp3`));
     }
 
     let cmd = 'mpv ';
@@ -41,5 +41,7 @@ export class TtsService {
     for (var i = 0; i < results.length; i++) {
       fs.unlinkSync(this.getFilename(`${i}.mp3`));
     }
+
+    return results
   }
 }
