@@ -2,9 +2,8 @@ import * as googleTTS from 'google-tts-api';
 import { Injectable } from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as http from 'node:http';
-import * as https from 'node:https';
 import * as child_process from 'node:child_process';
+import { Readable } from 'stream';
 
 Injectable();
 export class TtsService {
@@ -12,43 +11,12 @@ export class TtsService {
     return path.join((process.env.PISTEREO_CACHE ?? '') as string, file);
   }
 
-  private async downloadFile(url, dest) {
-    return new Promise((resolve, reject) => {
-      const info = new URL(url)
-      const httpClient = info.protocol === 'https:' ? https : http;
-      const options = {
-        host: info.host,
-        path: info.pathname,
-        headers: {
-          'user-agent': 'WHAT_EVER',
-        },
-      };
-
-      httpClient
-        .get(options, (res) => {
-          // check status code
-          if (res.statusCode !== 200) {
-            const msg = `request to ${url} failed, status code = ${res.statusCode} (${res.statusMessage})`;
-            reject(new Error(msg));
-            return;
-          }
-
-          const file = fs.createWriteStream(dest);
-          file.on('finish', function () {
-            // close() is async, call resolve after close compxxxxxletes.
-            file.close(resolve);
-          });
-          file.on('error', function (err) {
-            // Delete the file async. (But we don't check the result)
-            fs.unlinkSync(dest);
-            reject(err);
-          });
-
-          res.pipe(file);
-        })
-        .on('error', reject)
-        .end();
-    });
+  private async downloadFile(url, filename) {
+    const response = await fetch(url);
+    if (response.ok && response.body) {
+       const buffer = await response.buffer();
+       await writeFile(filename, buffer);
+    }
   }
 
   async say(token: string, text: string, lang: string, slow: boolean) {
