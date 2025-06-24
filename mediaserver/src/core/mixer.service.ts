@@ -81,11 +81,11 @@ export class MixerService implements OnModuleInit {
     const res = await this.amixer(['-D', device, 'contents']);
     const contents = await this.parseContents(res, ch);
     contents.device = device;
-let s = StateService.loadState();
-if (!s) {
-  s = new State();
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
     }
-s.mixer =contents;
+    s.mixer = contents;
     StateService.saveState(s);
     return contents;
   }

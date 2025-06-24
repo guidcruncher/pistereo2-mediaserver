@@ -15,6 +15,7 @@ import { MpvPlayerService } from './mpv/mpv-player.service';
 import { LibrespotPlayerService } from './librespot/librespot-player.service';
 import { AudioService } from './audio.service';
 import { AuthToken } from './decorators';
+import { TtsService } from './tts.service';
 
 @Controller('/')
 export class AppController {
@@ -28,6 +29,7 @@ export class AppController {
     private readonly mpvPlayer: MpvPlayerService,
     private readonly librespotPlayer: LibrespotPlayerService,
     private readonly audioService: AudioService,
+    private readonly ttsService: TtsService,
   ) {}
 
   @Get('/api/player/stream/metadata')
@@ -218,5 +220,27 @@ export class AppController {
     await this.mpvPlayer.setVolume(volume);
     await this.librespotPlayer.setVolume(volume);
     return {};
+  }
+
+  @Put('/api/player/say')
+  async speakText(@AuthToken() token: string, @Body() data: any) {
+    let status: any = await this.determineActive(token);
+
+    if (status && status.device.playing) {
+      await this.pause(token);
+    }
+
+    let res = this.ttsService.say(
+      token,
+      data.text,
+      data.lang,
+      data.slow ?? false,
+    );
+
+    if (status && status.device.playing) {
+      await this.resume(token);
+    }
+
+    return res;
   }
 }
