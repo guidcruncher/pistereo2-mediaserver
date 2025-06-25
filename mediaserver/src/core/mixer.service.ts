@@ -1,11 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { State, StateService } from '../state/state.service';
+import { OnModuleInit, Injectable, Logger } from '@nestjs/common';
 import { Channel, Frequency, Mixer } from './equaliser';
 import * as cp from 'child_process';
 import * as fs from 'node:fs';
 
 @Injectable()
-export class MixerService {
+export class MixerService implements OnModuleInit {
   private readonly logger = new Logger(MixerService.name, { timestamp: true });
+
+  async onModuleInit(): Promise<void> {
+    await this.loadMixer('equal');
+  }
 
   async getMixer(device: string): Promise<Mixer> {
     const equal: Mixer = await this.contents(device);
@@ -17,6 +22,13 @@ export class MixerService {
       const f: Frequency = mixer.frequencies[i];
       await this.cset(device, f.numid, f.channels);
     }
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    s.mixer = mixer;
+    StateService.saveState(s);
+    return mixer;
   }
 
   async resetMixer(device: string, level: number) {
@@ -28,7 +40,25 @@ export class MixerService {
       });
       await this.cset(device, f.numid, f.channels);
     }
-    return await this.getMixer(device);
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    s.mixer = mixer;
+    StateService.saveState(s);
+    return mixer;
+  }
+
+  async loadMixer(device: string) {
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    if (s.mixer) {
+      return await this.updateMixer(device, s.mixer);
+    }
+
+    return await this.resetMixer(device, 60);
   }
 
   private async cset(device: string, numid: number, values: Channel[]) {
@@ -41,6 +71,7 @@ export class MixerService {
         .map((a) => {
           return a.value;
         })
+
         .join(',')}`,
     ]);
   }
@@ -50,6 +81,12 @@ export class MixerService {
     const res = await this.amixer(['-D', device, 'contents']);
     const contents = await this.parseContents(res, ch);
     contents.device = device;
+    let s = StateService.loadState();
+    if (!s) {
+      s = new State();
+    }
+    s.mixer = contents;
+    StateService.saveState(s);
     return contents;
   }
 

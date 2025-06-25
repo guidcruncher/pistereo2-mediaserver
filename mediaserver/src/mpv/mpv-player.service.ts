@@ -100,6 +100,16 @@ export class MpvPlayerService implements OnModuleInit {
     });
   }
 
+  async isPlaylistFinished(): Promise<boolean> {
+    let size = await this.sendCommand('get_property', ['playlist-count']);
+    let posn = await this.sendCommand('get_property', ['playlist-pos']);
+    if (size && posn) {
+      return parseInt(size.data) == parseInt(posn.data);
+    }
+
+    return false;
+  }
+
   async togglePlayback() {
     await this.sendCommand('cycle', ['pause']);
     const prop = await this.sendCommand('get_property', ['pause']);
