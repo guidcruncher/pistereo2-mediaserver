@@ -225,9 +225,15 @@ export class AppController {
   @Put('/api/player/say')
   async speakText(@AuthToken() token: string, @Body() data: any) {
     let status: any = await this.determineActive(token);
+    let source = (await this.getSource(token)).source;
 
     if (status && status.device && status.device.playing) {
-      await this.pause(token);
+      if (source == 'mpv') {
+        return await this.mpvPlayer.pause();
+      }
+      if (source == 'spotify') {
+        return await this.librespotPlayer.pause();
+      }
     }
 
     let res = this.ttsService.say(
@@ -238,7 +244,12 @@ export class AppController {
     );
 
     if (status && status.device && status.device.playing) {
-      await this.resume(token);
+      if (source == 'mpv') {
+        return await this.mpvPlayer.resume();
+      }
+      if (source == 'spotify') {
+        return await this.librespotPlayer.resume();
+      }
     }
 
     return res;
