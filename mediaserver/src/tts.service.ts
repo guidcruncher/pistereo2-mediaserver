@@ -1,5 +1,5 @@
 import * as googleTTS from 'google-tts-api';
-import { Injectable } from '@nestjs/common';
+import { Logger, Injectable } from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as child_process from 'node:child_process';
@@ -8,6 +8,10 @@ import { State, StateService } from './state/state.service';
 
 Injectable();
 export class TtsService {
+  private readonly logger: Logger = new Logger(TtsService.name, {
+    timestamp: true,
+  });
+
   private getFilename(file: string) {
     return path.join((process.env.PISTEREO_CACHE ?? '') as string, file);
   }
@@ -21,7 +25,9 @@ export class TtsService {
   }
 
   async say(token: string, text: string, lang: string, slow: boolean) {
-    const results = googleTTS.getAudioBase64(text, {
+    this.logger.debug('Passing request to Google TTS');
+
+    const results = await googleTTS.getAudioBase64(text, {
       lang: lang,
       slow: slow,
       host: 'https://translate.google.com',
@@ -29,21 +35,30 @@ export class TtsService {
     });
 
     // save the audio file
+    this.logger.verbose('Saving audio buffer');
     const buffer = Buffer.from(results, 'base64');
     fs.writeFileSync(this.getFilename(`0.mp3`), buffer, { encoding: 'base64' });
 
     let st = StateService.loadState();
     let cmd = 'mpv --no-video ';
     if (st && st.volumeMpv) {
-      cmd += ' --volume ' + st.volumeMpv.toString() + ' ';
+      cmd += ' --volume=' + st.volumeMpv.toString() + ' ';
     }
 
     cmd += `${this.getFilename(`0.mp3`)} `;
+    let res = '';
 
-    child_process.execSync(cmd);
+    try {
+      this.logger.verbose(`Running command ${cmd}`);
 
+      res = child_process.execSync(cmd, { encoding: 'utf8', timeout: 10000 });
+    } catch (err) {
+      this.logger.error('Error running tts player', err);
+    }
+
+    this;
     fs.unlinkSync(this.getFilename(`0.mp3`));
 
-    return results;
+    return res;
   }
 }
