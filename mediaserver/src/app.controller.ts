@@ -227,12 +227,14 @@ export class AppController {
     let status: any = await this.determineActive(token);
     let source = (await this.getSource(token)).source;
 
+this.logger.error(JSON.stringify(status))
+
     if (status && status.device && status.device.playing) {
       if (source == 'mpv') {
-        return await this.mpvPlayer.pause();
+        await this.mpvPlayer.pause();
       }
       if (source == 'spotify') {
-        return await this.librespotPlayer.pause();
+        await this.librespotPlayer.pause();
       }
     }
 
@@ -245,10 +247,10 @@ export class AppController {
 
     if (status && status.device && status.device.playing) {
       if (source == 'mpv') {
-        return await this.mpvPlayer.resume();
+        await this.mpvPlayer.resume();
       }
       if (source == 'spotify') {
-        return await this.librespotPlayer.resume();
+        await this.librespotPlayer.resume();
       }
     }
 

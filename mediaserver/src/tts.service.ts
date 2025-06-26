@@ -40,7 +40,7 @@ export class TtsService {
     fs.writeFileSync(this.getFilename(`0.mp3`), buffer, { encoding: 'base64' });
 
     let st = StateService.loadState();
-    let cmd = 'mpv --no-video ';
+    let cmd = 'mpv --no-video --ao=alsa';
     if (st && st.volumeMpv) {
       cmd += ' --volume=' + st.volumeMpv.toString() + ' ';
     }
