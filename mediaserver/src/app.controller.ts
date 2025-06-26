@@ -228,7 +228,7 @@ export class AppController {
 
     if (status && status.device && status.device.playing) {
       if (status.track.uri.source == 'spotify') {
-         await this.librespotPlayer.pause();
+         await this.librespotPlayer.stop();
       } else {
         await this.mpvPlayer.stop();
       }
@@ -243,7 +243,7 @@ export class AppController {
 
     if (status && status.device && status.device.playing) {
       if (status.track.uri.source == 'spotify') {
-         await this.librespotPlayer.resume();
+         await this.librespotPlayer.play(status.track.uri);
       } else {
         await this.mpvPlayer.play(status.track.url);
       }
