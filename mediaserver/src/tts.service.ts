@@ -31,7 +31,6 @@ export class TtsService {
       lang: lang,
       slow: slow,
       host: 'https://translate.google.com',
-      splitPunct: ',.?',
     });
 
     // save the audio file
