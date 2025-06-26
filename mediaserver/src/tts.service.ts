@@ -21,16 +21,16 @@ export class TtsService {
   }
 
   async say(token: string, text: string, lang: string, slow: boolean) {
-    const results = googleTTS.getAllAudioUrls(text, {
+    const results = googleTTS.getAudioBase64(text, {
       lang: lang,
       slow: slow,
       host: 'https://translate.google.com',
       splitPunct: ',.?',
     });
 
-    for (var i = 0; i < results.length; i++) {
-      await this.downloadFile(results[i].url, this.getFilename(`${i}.mp3`));
-    }
+    // save the audio file
+    const buffer = Buffer.from(results, 'base64');
+    fs.writeFileSync(this.getFilename(`0.mp3`), buffer, { encoding: 'base64' });
 
     let st = StateService.loadState();
     let cmd = 'mpv --no-video ';
@@ -38,15 +38,11 @@ export class TtsService {
       cmd += ' --volume ' + st.volumeMpv.toString() + ' ';
     }
 
-    for (var i = 0; i < results.length; i++) {
-      cmd += `${this.getFilename(`${i}.mp3`)} `;
-    }
+    cmd += `${this.getFilename(`0.mp3`)} `;
 
     child_process.execSync(cmd);
 
-    for (var i = 0; i < results.length; i++) {
-      fs.unlinkSync(this.getFilename(`${i}.mp3`));
-    }
+    fs.unlinkSync(this.getFilename(`0.mp3`));
 
     return results;
   }
