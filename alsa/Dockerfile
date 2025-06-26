@@ -111,6 +111,7 @@ ENV PISTEREO_CACHE=/cache
 ENV PISTEREO_CONFIG=/config
 ENV IN_DOCKER="yes"
 ENV PISTEREO_EQ_RESET=60
+ENV AUDIO_BACKEND=alsa
 
 ENTRYPOINT [ "/bin/sh", "-E", "-c" ]
 CMD ["/app/startcontainer.sh"]

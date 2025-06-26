@@ -115,6 +115,7 @@ ENV PISTEREO_EQ_RESET=60
 ENV PULSE_SERVER=""
 ENV PULSE_COOKIE=/tmp/pulseaudio/cookie
 ENV PISTEREO_LOGLEVELS="log,error,warn,debug"
+ENV AUDIO_BACKEND=pulse
 
 ENTRYPOINT [ "/bin/sh", "-E", "-c" ]
 CMD ["/app/startcontainer.sh"]

@@ -113,6 +113,7 @@ ENV PISTEREO_CONFIG=/config
 ENV IN_DOCKER="yes"
 ENV PISTEREO_EQ_RESET=60
 ENV PISTEREO_LOGLEVELS="log,error,warn,debug"
+ENV AUDIO_BACKEND=pipewire
 
 ENTRYPOINT [ "/bin/sh", "-E", "-c" ]
 CMD ["/app/startcontainer.sh"]

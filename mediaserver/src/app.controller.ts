@@ -225,16 +225,12 @@ export class AppController {
   @Put('/api/player/say')
   async speakText(@AuthToken() token: string, @Body() data: any) {
     let status: any = await this.determineActive(token);
-    let source = (await this.getSource(token)).source;
-
-this.logger.error(JSON.stringify(status))
 
     if (status && status.device && status.device.playing) {
-      if (source == 'mpv') {
-        await this.mpvPlayer.pause();
-      }
-      if (source == 'spotify') {
-        await this.librespotPlayer.pause();
+      if (status.track.uri.source == 'spotify') {
+         await this.librespotPlayer.pause();
+      } else {
+        await this.mpvPlayer.stop();
       }
     }
 
@@ -246,11 +242,10 @@ this.logger.error(JSON.stringify(status))
     );
 
     if (status && status.device && status.device.playing) {
-      if (source == 'mpv') {
-        await this.mpvPlayer.resume();
-      }
-      if (source == 'spotify') {
-        await this.librespotPlayer.resume();
+      if (status.track.uri.source == 'spotify') {
+         await this.librespotPlayer.resume();
+      } else {
+        await this.mpvPlayer.play(status.track.url);
       }
     }
 

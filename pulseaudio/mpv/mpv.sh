@@ -4,6 +4,7 @@ configfilename="$PISTEREO_CONFIG"/configuration.env
 if [ -f "$configfilename" ]; then
   dotenv -o -e "$configfilename" -- mpv -v --alsa-mixer-device="$PISTEREO_ALSA_DEVICE" \
   --ao=pulse \
+  --audio-exclusive=no \
   --no-video --keep-open=yes \
   --input-ipc-server="$PISTEREO_MPV_SOCKET" \
   --idle=yes --display-tags-clr --msg-level=cplayer=error \
@@ -13,6 +14,7 @@ if [ -f "$configfilename" ]; then
 else
   mpv -v --alsa-mixer-device="$PISTEREO_ALSA_DEVICE" \
   --ao=pulse \
+    --audio-exclusive=no \t
   --no-video --keep-open=yes \
   --input-ipc-server="$PISTEREO_MPV_SOCKET" \
   --idle=yes --display-tags-clr --msg-level=cplayer=error \
