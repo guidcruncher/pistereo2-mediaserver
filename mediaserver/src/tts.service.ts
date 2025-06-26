@@ -59,6 +59,6 @@ export class TtsService {
     this;
     fs.unlinkSync(this.getFilename(`0.mp3`));
 
-    return res;
+    return {output: res};
   }
 }
