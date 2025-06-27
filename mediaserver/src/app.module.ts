@@ -11,7 +11,6 @@ import { SocketServerModule } from './socket-server/socket-server.module';
 import { CoreModule } from './core/core.module';
 import { DataModule } from './data/data.module';
 import { AudioService } from './audio.service';
-import { TtsService } from './tts.service';
 
 @Module({
   imports: [
@@ -25,7 +24,7 @@ import { TtsService } from './tts.service';
     DataModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TransportService, AudioService, TtsService],
+  providers: [AppService, TransportService, AudioService],
   exports: [TransportService],
 })
 export class AppModule {}
